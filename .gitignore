@@ -1,3 +1,10 @@
+# Data files
+*.dat
+*.met
+
+# Executables
+bin/*
+
 # Prerequisites
 *.d
 
