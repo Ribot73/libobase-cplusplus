@@ -32,5 +32,5 @@ tests/bin/file_entity_test: debug/libobasefile.o debug/libobasecriteria.o debug/
 
 .PHONNY: clean
 clean:
-	rm debug/* 
-	rm tests/bin/*
+	rm debug/* || :
+	rm tests/bin/* || :
