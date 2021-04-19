@@ -3,7 +3,10 @@
 *.met
 
 # Executables
-bin/*
+tests/bin/*
+
+# Valgrind
+vgcore*
 
 # Prerequisites
 *.d
