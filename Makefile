@@ -1,7 +1,7 @@
 cc = g++-10
 googletest = /home/francesc/Projectes/googletest
 
-all: libobase kanji file_entity_test
+all: clean libobase kanji file_entity_test
 
 libobase: debug/libobasecriteria.o debug/libobasestreamer.o debug/libobasefile.o
 

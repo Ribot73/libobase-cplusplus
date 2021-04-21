@@ -73,6 +73,8 @@ SerialRecord::SerialRecord(record_max isize, unsigned short int col_amount) : si
 
 SerialRecord::SerialRecord(unsigned short int col_amount) : SerialRecord(0, col_amount) {};
 
+SerialRecord::SerialRecord(const SerialRecord & serialRecord) : SerialRecord(serialRecord.boundaries.capacity()) {};
+
 SerialRecord::~SerialRecord() {
 	delete [] bytes;
 };

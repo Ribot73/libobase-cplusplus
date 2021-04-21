@@ -57,6 +57,7 @@ class SerialRecord {
 		inline vector<record_max>& getBoundaries() { return boundaries; };
 		void resize(record_max isize);
 		void parse(unsigned short position, unsigned int & start, unsigned int & length);
+		SerialRecord(const SerialRecord & serialRecord);
 		SerialRecord(unsigned short int col_amount);
 		SerialRecord(record_max isize, unsigned short int col_amount);
 		~SerialRecord();

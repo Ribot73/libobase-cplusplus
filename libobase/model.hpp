@@ -183,7 +183,7 @@ template <class M, class C> class Filter {
 
 template<class R, class E, class F> class FilteredEntity {
 	private:
-		E & entity;
+		E entity;
 		F filter;
 	public:
 		FilteredEntity<R, E, F>(E &ientity) : entity(ientity) {};

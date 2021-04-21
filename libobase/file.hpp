@@ -35,6 +35,15 @@ class SerialHeader{
 			bytes = new char[col_length];
 			current = bytes;
 		};
+		SerialHeader(const SerialHeader & serialHeader) : SerialHeader(serialHeader.col_amount) {};
+		SerialHeader & operator=(const SerialHeader & serialHeader) {
+			col_amount = serialHeader.col_amount;
+			col_length = serialHeader.col_length;
+			bytes = new char[col_length];
+			current = bytes;
+			return *this;
+
+		};
 		~SerialHeader() { delete [] bytes;	};
 };
 

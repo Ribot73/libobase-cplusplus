@@ -75,6 +75,7 @@ TEST(FileEntity, DescKunYomi_Filtered)
 	filteredDescKunYomi.open();
 	ASSERT_NE(filteredDescKunYomi.fetch(kanji), 0);
 	ASSERT_EQ(kanji.next().value.getValue(), Ideogram("撃").getValue());
+	ASSERT_EQ(kanji.next().value.getValue(), Ideogram("LAla").getValue());
 	filteredDescKunYomi.close();
 }
 
