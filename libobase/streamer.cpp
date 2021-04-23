@@ -6,17 +6,22 @@
 using namespace std;
 
 void SerialRecord::write(string &value) {
-	write(current, value);
+	writeStr(current, value);
 	current += value.length();
 };
 
+void SerialRecord::write(const char* ibytes, unsigned int ilength) {
+	writeStr(current, ibytes, ilength);
+	current += ilength;
+};
+
 void SerialRecord::write(unsigned short int value) {
-	write(current, value);
+	writeUShort(current, value);
 	current += 2;
 };
 
 void SerialRecord::write(unsigned int value) {
-	write(current, value);
+	writeUInt(current, value);
 	current += 4;
 };
 
@@ -52,9 +57,11 @@ void SerialRecord::resize(record_max isize) {
 	if(0 == isize) {
 		delete [] bytes;
 		bytes = 0;
+		size = isize;
 	} else if(isize > size) {
 		delete [] bytes;
 		bytes = new char[isize];
+		size = isize;
 	}
 	current = bytes;
 };

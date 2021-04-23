@@ -31,23 +31,23 @@ int main() {
 	cout << "Tamany: " << allKanji.size() << endl;
 
 	cout << "allKanji.at(0)->next().indent: " << allKanji.at(0)->next().indent << endl;
-	cout << "allKanji.at(0)->value.getValue(): " << allKanji.at(0)->value.getValue() << endl;
-	cout << "allKanji.at(0)->next().value.getValue(): " << allKanji.at(0)->next().value.getValue() << endl;
-	cout << "allKanji.at(0)->next().next().value.getValue(): " << allKanji.at(0)->next().next().value.getValue() << endl;
-	cout << "allKanji.at(0)->next().next().next().value.getValue(): " << allKanji.at(0)->next().next().next().value.getValue() << endl;
-	cout << "allKanji.at(0)->next().next().next().next().value.getValue(): " << allKanji.at(0)->next().next().next().next().value.getValue() << endl;
-	cout << "allKanji.at(0)->next().next().next().next().next().value.getValue(): " << allKanji.at(0)->next().next().next().next().next().value.getValue() << endl;
+	cout << "allKanji.at(0)->value.getValue(): " << allKanji.at(0)->column.getValue() << endl;
+	cout << "allKanji.at(0)->next().value.getValue(): " << allKanji.at(0)->next().column.getValue() << endl;
+	cout << "allKanji.at(0)->next().next().value.getValue(): " << allKanji.at(0)->next().next().column.getValue() << endl;
+	cout << "allKanji.at(0)->next().next().next().value.getValue(): " << allKanji.at(0)->next().next().next().column.getValue() << endl;
+	cout << "allKanji.at(0)->next().next().next().next().value.getValue(): " << allKanji.at(0)->next().next().next().next().column.getValue() << endl;
+	cout << "allKanji.at(0)->next().next().next().next().next().value.getValue(): " << allKanji.at(0)->next().next().next().next().next().column.getValue() << endl;
 
-	cout << "allKanji.at(2)->value.getValue(): " << allKanji.at(2)->value.getValue() << endl;
-	cout << "allKanji.at(2)->next().value.getValue(): " << allKanji.at(2)->next().value.getValue() << endl;
-	cout << "allKanji.at(2)->next().next().next().value.getValue(): " << allKanji.at(2)->next().next().next().next().value.getValue() << endl;
+	cout << "allKanji.at(2)->value.getValue(): " << allKanji.at(2)->column.getValue() << endl;
+	cout << "allKanji.at(2)->next().value.getValue(): " << allKanji.at(2)->next().column.getValue() << endl;
+	cout << "allKanji.at(2)->next().next().next().value.getValue(): " << allKanji.at(2)->next().next().next().next().column.getValue() << endl;
 
 	vector<simpleWord::SimpleWord *> allSimpleWord;
 	simpleWordEntity.retrieve(allSimpleWord);
 	cout << "Indent: " << simpleWord::SimpleWord::indent << endl;
 	cout << "Tamany: " << allSimpleWord.size() << endl;
 
-	cout << "allSimpleWord.at(3)->value.getValue(): " << allSimpleWord.at(3)->value.getValue() << endl;
-	cout << "allSimpleWord.at(3)->next().value.getValue(): " << allSimpleWord.at(3)->next().value.getValue() << endl;
-	cout << "allSimpleWord.at(3)->next().next().next().value.getValue(): " << allSimpleWord.at(3)->next().next().next().next().value.getValue() << endl;
+	cout << "allSimpleWord.at(3)->value.getValue(): " << allSimpleWord.at(3)->column.getValue() << endl;
+	cout << "allSimpleWord.at(3)->next().value.getValue(): " << allSimpleWord.at(3)->next().column.getValue() << endl;
+	cout << "allSimpleWord.at(3)->next().next().next().value.getValue(): " << allSimpleWord.at(3)->next().next().next().next().column.getValue() << endl;
 }

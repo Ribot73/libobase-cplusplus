@@ -88,14 +88,15 @@ template<class R> class FileEntity {
 
 template<class R, class T> class VarFileEntity : public FileEntity<R> {
 	public:
-		static const unsigned short RECORD_LENGTH = 4 + (2 * R::indent);
+	static const unsigned short RECORD_LENGTH = 4 + (2 * R::indent);
+	static const unsigned short COLUMN_NUMBER = R::indent;
 	public:
 		ifstream idataFile;
 		SerialHeader serialHeader;
 		SerialRecord serialRecord;
 	public:
-		VarFileEntity<R, T>(VarFileEntity<R, T> & ivarFileEntity) : FileEntity<R>(ivarFileEntity), serialHeader(R::indent), serialRecord(R::indent) {};
-		VarFileEntity<R, T>(const char* ifolder, const char* irecordName) : FileEntity<R>(ifolder, irecordName, "dat", "met"), serialHeader(R::indent), serialRecord(R::indent) {};
+		VarFileEntity<R, T>(VarFileEntity<R, T> & ivarFileEntity) : FileEntity<R>(ivarFileEntity), serialHeader(COLUMN_NUMBER), serialRecord(COLUMN_NUMBER) {};
+		VarFileEntity<R, T>(const char* ifolder, const char* irecordName) : FileEntity<R>(ifolder, irecordName, "dat", "met"), serialHeader(COLUMN_NUMBER), serialRecord(COLUMN_NUMBER) {};
 
 		void insert(R record) {
 			ofstream odataFile(FileEntity<R>::dataName, ios::out | ios::app | ios::binary);

@@ -21,22 +21,22 @@ class SerialRecord {
 		vector<unsigned int> boundaries;
 
 	public:
-		static void write(char* target, string & ivalue) {
+		static void writeStr(char* target, string & ivalue) {
 			memcpy(target, ivalue.data(), ivalue.length());
 		};
 
-		static void write(char* target, const char* ibytes, unsigned int ilength) {
+		static void writeStr(char* target, const char* ibytes, unsigned int ilength) {
 			memcpy(target, ibytes, ilength);
 		};
 
-		static void write(char* target, unsigned short int value) {
+		static void writeUShort(char* target, unsigned short int value) {
 			char* intBytes = reinterpret_cast<char*>(&value) + 1;
 
 			*(target++) = *(intBytes--);
 			*(target++) = *intBytes;
 		};
 
-		static void write(char* target, unsigned int value) {
+		static void writeUInt(char* target, unsigned int value) {
 			char* intBytes = reinterpret_cast<char*>(&value) + 3;
 
 			*(target++) = *(intBytes--);
@@ -56,6 +56,7 @@ class SerialRecord {
 		inline char* getBytes() { return bytes; };
 		inline vector<record_max>& getBoundaries() { return boundaries; };
 		void resize(record_max isize);
+		inline void start() { current = bytes; };
 		void parse(unsigned short position, unsigned int & start, unsigned int & length);
 		SerialRecord(const SerialRecord & serialRecord);
 		SerialRecord(unsigned short int col_amount);

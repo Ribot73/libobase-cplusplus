@@ -58,8 +58,8 @@ namespace kanjiSimple {
 	typedef class VarUTF8<5> Translation;
 	typedef class VarUTF8<6> Notes;
 	typedef class Record<SimpleId, KanjiId, Hiragana, Yomi, Translation, Notes> KanjiSimple;
-
 	typedef class RecordMapper<LEFT_RECORD, kanji::Id, RIGHT_RECORD, simpleWord::Id, RIGHT_RECORD, simpleWord::Hiragana, RIGHT_RECORD, simpleWord::Yomi, RIGHT_RECORD, simpleWord::Translation, RIGHT_RECORD, simpleWord::Notes> KanjiSimpleMapper;
+	typedef class JoinedEntity <KanjiSimple, kanji::KanjiEntity, simpleWord::SimpleWordEntity, KanjiSimpleMapper, Join<kanji::Id, simpleWord::KanjiId, StringEquals>> JoinedKanjiSimple;
 }
 
 #endif /* TESTS_KANJI_HPP_ */

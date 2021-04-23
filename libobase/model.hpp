@@ -81,7 +81,7 @@ template<unsigned short P> class UnsignedShort : public Column<P>  {
 		inline const unsigned int getValue() { return value; };
 		inline string serialize() {
 			char bytes[2];
-			SerialRecord::write(bytes, value);
+			SerialRecord::writeUShort(bytes, value);
 			return string(bytes, 2);
 		};
 		UnsignedShort() {};
@@ -104,7 +104,7 @@ template<unsigned short P> class UnsignedInt : public Column<P>  {
 		inline const unsigned short getValue() { return value; };
 		inline string serialize() {
 			char bytes[4];
-			SerialRecord::write(bytes, value);
+			SerialRecord::writeUInt(bytes, value);
 			return string(bytes, 4);
 		};
 		UnsignedInt() {};
@@ -120,35 +120,44 @@ template <class... V> class Record {
 		static const record_max size = 0;
 		static const unsigned short int indent = 0;
 	public:
-		inline void serialize(SerialRecord & serialRecord) {};
-		inline void deserialize(SerialRecord & serialRecord) {};
+		inline void write(SerialRecord & serialRecord) {};
+		inline void read(SerialRecord & serialRecord) {};
 		inline void calculate(SerialRecord & serialRecord) {};
 		inline record_max getSize() { return 0; };
 };
 
 template <class F, class... V> class Record<F, V...> {
 	public:
-		F value;
+		F column;
 		Record<V...> subRecord;
 		static const record_max size = F::size + Record<V...>::size;
 		static const unsigned short indent = 1 + Record<V...>::indent;
 
 	public:
-		inline F& column() { return value; };
 		inline Record<V ...>& next() { return subRecord; }
 
 		inline void serialize(SerialRecord & serialRecord) {
-			value.serialize(serialRecord);
-			next().serialize(serialRecord);
+			serialRecord.start();
+			write(serialRecord);
 		};
 
 		inline void deserialize(SerialRecord & serialRecord) {
-			value.deserialize(serialRecord);
-			subRecord.deserialize(serialRecord);
+			serialRecord.start();
+			read(serialRecord);
+		};
+
+		inline void write(SerialRecord & serialRecord) {
+			column.serialize(serialRecord);
+			subRecord.write(serialRecord);
+		};
+
+		inline void read(SerialRecord & serialRecord) {
+			column.deserialize(serialRecord);
+			subRecord.read(serialRecord);
 		};
 
 		inline void calculate(SerialRecord & serialRecord) {
-			serialRecord.boundaries.push_back((F::position == 1 ? value.length() : value.length() + serialRecord.boundaries.back()));
+			serialRecord.boundaries.push_back((F::position == 1 ? column.length() : column.length() + serialRecord.boundaries.back()));
 			subRecord.calculate(serialRecord);
 		};
 
@@ -157,10 +166,10 @@ template <class F, class... V> class Record<F, V...> {
 			calculate(serialRecord);
 		};
 
-		inline record_max getSize() { return value.getSize() + subRecord.getSize(); };
+		inline record_max getSize() { return column.getSize() + subRecord.getSize(); };
 
 		Record<F, V ...>() {};
-		Record<F, V ...>(F ivalue, V... irest) : value(ivalue), subRecord(irest...) {};
+		Record<F, V ...>(F icolumn, V... irest) : column(icolumn), subRecord(irest...) {};
 };
 
 template <class M, class C> class Filter {
@@ -225,10 +234,11 @@ template <class P, class C, class... V> class RecordMapper<P, C, V...> {
 
 	private:
 		inline void map(SerialRecord & target, SerialRecord & source) {
-			record_max s_length = C::position == 1 ? source.boundaries[C::position - 1] : source.boundaries()[C::position - 1] - source.boundaries()[C::position - 2];
+			record_max s_position = C::position == 1 ? 0 : source.boundaries[C::position - 2];
+			record_max s_length = source.boundaries[C::position - 1] - s_position;
 			record_max t_previous = (target.boundaries.empty() ? 0 : target.boundaries.back());
 			target.boundaries.push_back(t_previous + s_length);
-			write(&source.bytes[source.boundaries[C::position]], s_length);
+			target.write(&source.getBytes()[s_position], s_length);
 		}
 
 		inline record_max measure(SerialRecord & source) {
@@ -238,7 +248,7 @@ template <class P, class C, class... V> class RecordMapper<P, C, V...> {
 	public:
 		inline void map(SerialRecord & target, SerialRecord & leftRecord, SerialRecord & rightRecord) {
 			map(target, (P::position == LEFT_RECORD::position ? leftRecord : rightRecord));
-			subRecordMapper(target, leftRecord, rightRecord);
+			subRecordMapper.map(target, leftRecord, rightRecord);
 		};
 
 
@@ -251,8 +261,6 @@ template <class P, class C, class... V> class RecordMapper<P, C, V...> {
 			target.resize(length + 1);
 			map(target, leftRecord, rightRecord);
 		};
-
-		RecordMapper<P, C, V ...>() {};
 };
 
 
@@ -272,8 +280,9 @@ template <class LC, class RC, class C> class Join {
 template <class R, class LE, class RE, class M, class J> class JoinedEntity {
 	private:
 			J join;
-			LE & leftEntity;
-			RE & rightEntity;
+			LE leftEntity;
+			RE rightEntity;
+			M recordMapper;
 			SerialRecord leftRecord;
 			SerialRecord rightRecord;
 			bool isLeft = false;
@@ -308,6 +317,7 @@ template <class R, class LE, class RE, class M, class J> class JoinedEntity {
 					}
 					if(rightEntity.fetch(rightRecord, join.getCriterium(), J::rightPosition, &(leftRecord.getBytes()[leftStart]), leftLength)) {
 						isLeft = true;
+						recordMapper.build(serialRecord, leftRecord, rightRecord);
 						return 1;
 					} else {
 						isLeft = false;
@@ -328,7 +338,7 @@ template <class R, class LE, class RE, class M, class J> class JoinedEntity {
 				return 0;
 			};
 
-			//JoinedEntity<E, LE, RE, M, J>(LE & leftEntity, RE & rightEntity, M & mapper, J join) {};
+			JoinedEntity<R, LE, RE, M, J>(LE & ileftEntity, RE & irightEntity) : leftEntity(ileftEntity), rightEntity(irightEntity), leftRecord(LE::COLUMN_NUMBER), rightRecord(RE::COLUMN_NUMBER) {};
 };
 
 #endif /* LIBOBASE_MODEL_HPP_ */
