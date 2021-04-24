@@ -191,6 +191,8 @@ template <class M, class C> class Filter {
 };
 
 template<class R, class E, class F> class FilteredEntity {
+	public:
+		static const unsigned short COLUMN_NUMBER = R::indent;
 	private:
 		E entity;
 		F filter;
@@ -202,11 +204,15 @@ template<class R, class E, class F> class FilteredEntity {
 
 		int fetch(R &record) {
 			SerialRecord serialRecord(R::indent);
-			if(entity.fetch(serialRecord, filter.getCriterium(), F::position, filter.getBytes(), filter.length())) {
+			if(fetch(serialRecord)) {
 				record.deserialize(serialRecord);
 				return 1;
 			}
 			return 0;
+		};
+
+		int fetch(SerialRecord & serialRecord) {
+			return fetch(serialRecord, filter.getCriterium(), F::position, filter.getBytes(), filter.length());
 		};
 
 		int fetch(SerialRecord & serialRecord, Criterium & icriterium, unsigned short iposition, const char* ibytes, unsigned int ilength) {
@@ -278,6 +284,8 @@ template <class LC, class RC, class C> class Join {
 };
 
 template <class R, class LE, class RE, class M, class J> class JoinedEntity {
+	public:
+		static const unsigned short COLUMN_NUMBER = R::indent;
 	private:
 			J join;
 			LE leftEntity;
@@ -328,7 +336,7 @@ template <class R, class LE, class RE, class M, class J> class JoinedEntity {
 			};
 
 			int fetch(SerialRecord & serialRecord, Criterium & icriterium, unsigned short iposition, const char* ibytes, unsigned int ilength) {
-				while(leftEntity.fetch(serialRecord)) {
+				while(fetch(serialRecord)) {
 					unsigned int start, length;
 					serialRecord.parse(iposition, start, length);
 					if(icriterium.valid(&(serialRecord.getBytes()[start]), length, ibytes, ilength)) {

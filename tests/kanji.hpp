@@ -4,6 +4,8 @@
 #include <libobase/model.hpp>
 #include <libobase/file.hpp>
 
+static const char* DATA_FOLDER = "/home/francesc/Projects/libobase-cplusplus/tests/data";
+
 namespace kanji {
 	typedef class UnsignedInt<1> Id;
 	typedef class BoundUTF8<2, 4> Ideogram;
@@ -59,7 +61,6 @@ namespace kanjiSimple {
 	typedef class VarUTF8<6> Notes;
 	typedef class Record<SimpleId, KanjiId, Hiragana, Yomi, Translation, Notes> KanjiSimple;
 	typedef class RecordMapper<LEFT_RECORD, kanji::Id, RIGHT_RECORD, simpleWord::Id, RIGHT_RECORD, simpleWord::Hiragana, RIGHT_RECORD, simpleWord::Yomi, RIGHT_RECORD, simpleWord::Translation, RIGHT_RECORD, simpleWord::Notes> KanjiSimpleMapper;
-	typedef class JoinedEntity <KanjiSimple, kanji::KanjiEntity, simpleWord::SimpleWordEntity, KanjiSimpleMapper, Join<kanji::Id, simpleWord::KanjiId, StringEquals>> JoinedKanjiSimple;
 }
 
 #endif /* TESTS_KANJI_HPP_ */
